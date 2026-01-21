@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Report - YIASCM.CampusShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="ragging_report_logic.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-purple: #6A0DAD; 
+            --light-purple: #9370DB; 
+            --accent-green: #28a745; /* Green for main action button */
+            --white: #fff;
+            --text-color: #333;
+            --light-text-color: #555;
+            --card-bg: rgba(255, 255, 255, 0.98); 
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --header-height: 70px;
+        }
+
+         body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* --- ENHANCED BACKGROUND STYLE --- */
+            background: 
+                linear-gradient(rgba(210, 210, 210, 0.85), rgba(226, 232, 240, 0.85)), /* Light Overlay */
+                url('image1.png') no-repeat center center fixed; /* Placeholder Image */
+            background-size: cover;
+            color: var(--text-color);
+        }
+
+        /* Standard Header and Footer Styles */
+        .header {
+            height: var(--header-height);
+            background-color: var(--primary-purple);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+            transition: color 0.2s, border-bottom 0.2s;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            border-bottom-color: var(--accent-green);
+        }
+        
+        .footer {
+            background-color: var(--primary-purple);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 30px 5%;
+            font-size: 0.9rem;
+            border-top: 5px solid var(--accent-green);
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .footer-content > div { flex: 1 1 200px; margin: 15px 10px; }
+        .footer-content h4 { color: var(--white); margin-bottom: 10px;}
+        .footer-content a, .footer-content p { color: rgba(255, 255, 255, 0.6); text-decoration: none;}
+        .copy-info { flex-basis: 100%; text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.8rem;}
+
+        /* --- Report Form Specific Styles --- */
+        .container {
+            width: 95%;
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .container h1 {
+            color: var(--primary-purple);
+            font-size: 2rem;
+            border-bottom: 3px solid var(--accent-green);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-purple);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--light-purple);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(147, 112, 219, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent-green);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 30px;
+        }
+
+        .submit-btn:hover {
+            background-color: #1e8739;
+            transform: translateY(-2px);
+        }
+        
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+            text-align: center;
+        }
+        #message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .anonymous-note {
+            background-color: #ffeeb2;
+            padding: 10px;
+            border-radius: 6px;
+            color: #856404;
+            margin-bottom: 25px;
+            border-left: 5px solid #ffc107;
+            font-size: 0.9rem;
+        }
+        .anonymous-note i {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+            .header {
+                padding: 0 20px;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo-text">YIAscm.<span style="color: var(--accent-green);">CampusShield</span></div>
+        <nav class="nav-links">
+            <a href="stuhome.html" class="active">Home</a>
+            <a href="about.html">About</a>
+            <a href="rules.html">Guidelines</a>
+            <a href="track.html">Track</a>
+            <a href="report.html">Report</a>
+            <a href="ragging_report_login.html">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1><i class="fas fa-bullhorn mr-2"></i> Submit Confidential Report</h1>
+        
+        <div class="anonymous-note">
+            <i class="fas fa-user-secret"></i>
+            **Your privacy is our priority.** All reports are treated with the utmost confidentiality.
+        </div>
+
+        <form id="reportForm">
+            
+            <h2>Incident Information</h2>
+            <div class="form-group">
+                <label for="incidentType">Type of Incident</label>
+                <select id="incidentType" name="incidentType" required>
+                    <option value="">Select an incident type</option>
+                    <option value="Physical Ragging">Physical Ragging/Assault</option>
+                    <option value="Verbal Abuse">Verbal Abuse/Harassment</option>
+                    <option value="Cyberbullying">Cyberbullying/Online Harassment</option>
+                    <option value="Sexual Harassment">Sexual Harassment</option>
+                    <option value="Other">Other (Describe in detail below)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="incidentLocation">Location of Incident (Hostel, Block C, Mess, etc.)</label>
+                <input type="text" id="incidentLocation" name="incidentLocation" placeholder="e.g., Hostel Block D, Room 101" required>
+            </div>
+
+            <div class="form-group">
+                <label for="incidentDate">Date of Incident</label>
+                <input type="date" id="incidentDate" name="incidentDate" required>
+            </div>
+
+            <hr style="margin: 30px 0; border-top: 1px solid #eee;">
+
+            <h2>Parties Involved</h2>
+
+            <div class="form-group">
+                <label for="perpetratorDetails">Details of Perpetrator(s) (If known, e.g., Name/Year/ID/Description)</label>
+                <textarea id="perpetratorDetails" name="perpetratorDetails" placeholder="If unknown, describe their appearance or any identifying features." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="victimDetails">Details of Victim(s) (You may enter 'Self' or describe others, optional)</label>
+                <input type="text" id="victimDetails" name="victimDetails" placeholder="Name or Roll Number (Optional)">
+            </div>
+            
+            <hr style="margin: 30px 0; border-top: 1px solid #eee;">
+
+            <h2>Detailed Description</h2>
+            <div class="form-group">
+                <label for="description">Full Description of the Incident (What happened, when, and who was present)</label>
+                <textarea id="description" name="description" rows="6" placeholder="Provide as much detail as possible to help the investigation."></textarea>
+            </div>
+
+            <div id="message" style="display: none;"></div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane mr-2"></i> Submit Report Securely
+            </button>
+        </form>
+
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div><h4><i class="fas fa-phone-alt"></i> Contact & Helpline</h4><p>24/7 National Anti-Ragging Helpline:</p><p><strong>1800-XXX-XXXX</strong></p><p>Campus Security Desk: (011) 555-SAFE</p></div>
+            <div><h4><i class="fas fa-envelope"></i> Contact Us</h4><a href="mailto:support@antiragging.edu">support@antiragging.edu</a><a href="mailto:admin@university.edu">admin@university.edu</a><p style="margin-top: 10px;">(Please use the report form for incidents.)</p></div>
+            <div><h4><i class="fas fa-code"></i> Project Details</h4><p>YIASCM.CampusShield Initiative V2.0</p><p>Developed By: G M Museeb Hassan & Mohammed Aman</p><p>Goal: Secure, Transparent, and Immediate Action Platform.</p></div>
+            <div class="copy-info">&copy; 2025 YIASCM.CampusShield | All Rights Reserved.</div>
+        </div>
+    </footer>
+
+</body>
+</html>

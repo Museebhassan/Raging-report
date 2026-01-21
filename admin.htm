@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - YIASCM.CampusShield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Custom Theme Variables and Font */
+        :root {
+            --primary-purple: #4B0082; /* Darker Indigo for Admin */
+            --light-purple: #8A2BE2; 
+            --accent-red: #dc3545; /* Urgent/Warning */
+            --accent-green: #28a745; /* Resolved */
+            --bg-color: #f7f9fb; /* Light background for content area */
+            --sidebar-bg: #1a082a; /* Very dark for sidebar */
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* --- Sidebar Styling --- */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 20;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+            border-left: 5px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-purple);
+            border-left-color: var(--light-purple);
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            margin-left: 250px;
+            padding: 40px 30px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* --- Status Badges --- */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        /* Adjusted badge classes for the status names used in local storage */
+        .badge-pendingreview { background-color: #007bff40; color: #007bff; } /* Blue/New */
+        .badge-underinvestigation { background-color: #ffcc0040; color: #cc9900; } /* Amber/Investigating */
+        .badge-closedresolved { background-color: var(--accent-green)40; color: var(--accent-green); } /* Green/Resolved */
+        .badge-closedrejected { background-color: var(--accent-red)40; color: var(--accent-red); } /* Red/Rejected */
+        
+        /* --- Mobile Responsiveness --- */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 30;
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding-top: 80px; /* Space for the toggle button */
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Table Styling */
+        .reports-table th, .reports-table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        .reports-table th {
+            background-color: #e5e7eb;
+            font-weight: 600;
+            color: #4B0082;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .reports-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .reports-table tr:hover {
+            background-color: #f3f4f6;
+        }
+        .user-id-text {
+            word-break: break-all;
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+        
+        /* Dropdown Menu for Action */
+        .action-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        /* Use a standard select dropdown for simplicity and reliability */
+        .status-select {
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            appearance: none; /* Removes default dropdown arrow */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="white"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.7em top 50%, 0 0;
+            background-size: 0.65em auto, 100%;
+        }
+        .status-select:hover {
+            background-color: var(--light-purple);
+        }
+    </style>
+</head>
+<body>
+
+    <button id="menuToggle" class="menu-toggle">
+        <i class="fas fa-bars"></i> Menu
+    </button>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            CampusShield Admin
+        </div>
+        <nav class="flex flex-col mt-4 flex-grow">
+            <a href="#" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="#" class="nav-link"><i class="fas fa-file-alt"></i> New Reports <span id="reportCount" class="ml-auto px-2 py-1 bg-red-600 text-white rounded-full text-xs">0</span></a>
+            <a href="#" class="nav-link" onclick="alert('Case search is not implemented in this demo.')"><i class="fas fa-search"></i> Case Search</a>
+            <a href="#" class="nav-link" onclick="alert('User Management is not implemented in this demo.')"><i class="fas fa-users"></i> User Management</a>
+        </nav>
+        <div class="p-4 mt-auto border-t border-gray-700">
+            <p class="text-xs text-gray-400">Current User ID:</p>
+            <p id="currentUserId" class="user-id-text mt-1">Admin User</p>
+            <a href="ragging_report_login.html" class="nav-link -ml-5 mt-3"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-clipboard-list mr-3 text-red-500"></i> Incident Overview
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
+                <p class="text-sm text-gray-500 font-medium">Reports Pending</p>
+                <p id="statNew" class="text-3xl font-bold mt-1 text-yellow-600">0</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                <p class="text-sm text-gray-500 font-medium">Cases Investigating</p>
+                <p id="statInvestigating" class="text-3xl font-bold mt-1 text-blue-600">0</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                <p class="text-sm text-gray-500 font-medium">Cases Resolved</p>
+                <p id="statResolved" class="text-3xl font-bold mt-1 text-green-600">0</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-gray-700">All Submitted Reports</h2>
+                <span id="totalReports" class="text-sm font-medium text-gray-500">Total: 0</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 reports-table">
+                    <thead>
+                        <tr>
+                            <th class="w-1/12">ID</th>
+                            <th class="w-2/12">Type</th>
+                            <th class="w-2/12">Date</th>
+                            <th class="w-3/12">Location / Perpetrator</th>
+                            <th class="w-2/12">Status</th>
+                            <th class="w-2/12">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsTableBody" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                </table>
+                <p id="loadingMessage" class="text-center p-4 text-gray-500">Loading reports...</p>
+            </div>
+            
+        </div>
+        <footer class="text-center text-sm text-gray-500 py-6 mt-10 border-t border-gray-200">
+            &copy; 2025 YIAscm.CampusShield Admin | Zero-Tolerance Reporting Platform
+        </footer>
+
+    </div>
+
+    <script src="ragging_report_logic.js"></script> 
+
+    <script>
+        // DOM Elements
+        const reportsTableBody = document.getElementById('reportsTableBody');
+        const reportCountSpan = document.getElementById('reportCount');
+        const totalReportsSpan = document.getElementById('totalReports');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const statNew = document.getElementById('statNew');
+        const statInvestigating = document.getElementById('statInvestigating');
+        const statResolved = document.getElementById('statResolved');
+
+
+        // Function to determine CSS class for status badge
+        function getStatusBadgeClass(status) {
+            // Converts 'Pending Review' to 'badge-pendingreview'
+            const classStatus = status.toLowerCase().replace(/[\s()]/g, '');
+            return `badge-${classStatus}`;
+        }
+
+        /**
+         * Renders all reports fetched from Local Storage.
+         */
+        window.loadReports = function() {
+            // Call the global function from ragging_report_logic.js
+            const reports = window.getReports ? window.getReports() : []; 
+            
+            reportsTableBody.innerHTML = ''; // Clear existing rows
+            loadingMessage.style.display = 'none';
+
+            let pendingCount = 0;
+            let investigatingCount = 0;
+            let resolvedCount = 0;
+
+            if (reports.length === 0) {
+                reportsTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">No reports have been submitted yet.</td></tr>';
+            } else {
+                // Sort by timestamp, newest first
+                reports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                reports.forEach((report) => {
+                    // Update counters
+                    if (report.status === 'Pending Review') {
+                        pendingCount++; 
+                    } else if (report.status === 'Under Investigation') {
+                        investigatingCount++; 
+                    } else if (report.status === 'Closed (Resolved)') {
+                        resolvedCount++; 
+                    }
+
+                    // Format date 
+                    const dateObj = report.timestamp ? new Date(report.incidentDate) : new Date(report.timestamp);
+                    const reportDate = dateObj && !isNaN(dateObj) ? new Date(report.timestamp).toLocaleDateString('en-IN', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                    }) : 'N/A';
+                    
+                    // Truncate perpetrator details for table view
+                    const perpDetails = report.perpetratorDetails || 'Unknown';
+                    const truncatedPerp = perpDetails.length > 30 ? perpDetails.substring(0, 27) + '...' : perpDetails;
+
+                    // Generate the table row HTML
+                    const row = `
+                        <tr>
+                            <td class="text-xs text-gray-500 font-mono">${report.id || 'N/A'}</td>
+                            <td>${report.incidentType || 'N/A'}</td>
+                            <td>${reportDate}</td>
+                            <td>
+                                <strong>${report.incidentLocation || 'N/A'}</strong><br>
+                                <span class="text-xs text-gray-500">Perp: ${truncatedPerp}</span>
+                            </td>
+                            <td>
+                                <span class="badge ${getStatusBadgeClass(report.status || 'Pending Review')}">${report.status || 'Pending Review'}</span>
+                            </td>
+                            <td>
+                                <select class="status-select" onchange="window.updateReportStatus('${report.id}', this.value)">
+                                    <option value="" disabled selected>Update Status</option>
+                                    <option value="Pending Review" ${report.status === 'Pending Review' ? 'selected' : ''}>Pending Review</option>
+                                    <option value="Under Investigation" ${report.status === 'Under Investigation' ? 'selected' : ''}>Under Investigation</option>
+                                    <option value="Closed (Resolved)" ${report.status === 'Closed (Resolved)' ? 'selected' : ''}>Closed (Resolved)</option>
+                                    <option value="Closed (Rejected)" ${report.status === 'Closed (Rejected)' ? 'selected' : ''}>Closed (Rejected)</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `;
+                    reportsTableBody.innerHTML += row;
+                });
+            }
+
+            // Update stats
+            reportCountSpan.textContent = pendingCount;
+            totalReportsSpan.textContent = `Total: ${reports.length}`;
+            statNew.textContent = pendingCount;
+            statInvestigating.textContent = investigatingCount;
+            statResolved.textContent = resolvedCount;
+        };
+
+        // --- Event Listeners ---
+
+        // Mobile sidebar toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('mobile-visible');
+        });
+        
+        // Load reports when the window loads
+        window.addEventListener('load', window.loadReports);
+    </script>
+</body>
+</html>

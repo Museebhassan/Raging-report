@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports - YIAscm.CampusShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="ragging_report_logic.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-purple: #6A0DAD; 
+            --light-purple: #9370DB; 
+            --accent-green: #28a745; 
+            --warning-orange: #ffc107;
+            --info-blue: #17a2b8;
+            --closed-red: #dc3545;
+            --white: #fff;
+            --text-color: #333;
+            --light-text-color: #555;
+            --card-bg: rgba(255, 255, 255, 0.98); 
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --header-height: 70px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* Background image and overlay for the main content area */
+             background: 
+                linear-gradient(rgba(210, 210, 210, 0.85), rgba(226, 232, 240, 0.85)), /* Light Overlay */
+                url('image2.png') no-repeat center center fixed; /* Placeholder Image */
+            background-size: cover;
+            color: var(--text-color);
+        }
+
+        /* Standard Header and Footer Styles (Copied from report.html for consistency) */
+        .header {
+            height: var(--header-height);
+            background-color: var(--primary-purple);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo-text { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
+        .nav-links a { color: var(--white); text-decoration: none; margin-left: 30px; font-weight: 500; transition: color 0.2s, border-bottom 0.2s; padding-bottom: 5px; border-bottom: 2px solid transparent; }
+        .nav-links a:hover, .nav-links a.active { border-bottom-color: var(--accent-green); }
+
+        .footer {
+            background-color: var(--primary-purple);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 30px 5%;
+            font-size: 0.9rem;
+            border-top: 5px solid var(--accent-green);
+        }
+        .footer-content { display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1200px; margin: auto; }
+        .footer-content > div { flex: 1 1 200px; margin: 15px 10px; }
+        .footer-content h4 { color: var(--white); margin-bottom: 10px;}
+        .footer-content a, .footer-content p { color: rgba(255, 255, 255, 0.6); text-decoration: none;}
+        .copy-info { flex-basis: 100%; text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.8rem;}
+
+        /* --- Tracking Specific Styles --- */
+        .container {
+            width: 95%;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .container h1 {
+            color: var(--primary-purple);
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        
+        .tracking-form {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #trackId {
+            width: 70%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px 0 0 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .track-btn {
+            width: 30%;
+            padding: 12px;
+            background-color: var(--primary-purple);
+            color: var(--white);
+            border: none;
+            border-radius: 0 8px 8px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: -1px; /* Overlap border */
+        }
+        
+        .track-btn:hover {
+            background-color: var(--light-purple);
+        }
+        
+        #resultDiv {
+            margin-top: 25px;
+            text-align: left;
+            border-left: 5px solid var(--primary-purple);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            background-color: var(--white);
+            display: none; /* Hidden by default, shown by JavaScript */
+        }
+        
+        .tracking-result-card h3 {
+            color: var(--primary-purple);
+            margin-top: 0;
+            font-size: 1.3rem;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .status-container {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid;
+            /* Ensure text aligns nicely */
+            line-height: 1.2; 
+        }
+        .status-container i {
+            font-size: 2.2rem;
+            margin-top: 5px; /* Align icon slightly better */
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        /* Status Colors (These must match classes generated in ragging_report_logic.js) */
+        .pending-review { 
+            background-color: #fffbe6; 
+            color: #faad14; 
+            border-color: #ffe58f; 
+        } /* Yellow/Warning */
+        
+        .under-investigation { 
+            background-color: #e6f7ff; 
+            color: #1890ff; 
+            border-color: #91d5ff; 
+        } /* Blue/Info */
+        
+        .closed-resolved { 
+            background-color: #f6ffed; 
+            color: #52c41a; 
+            border-color: #b7eb8f; 
+        } /* Green/Success */
+        
+        .closed-rejected { 
+            background-color: #fff1f0; 
+            color: #f5222d; 
+            border-color: #ffa39e; 
+        } /* Red/Danger */
+
+        .status-container.pending-review i,
+        .status-container.under-investigation i,
+        .status-container.closed-resolved i,
+        .status-container.closed-rejected i {
+            /* Inherit color from the text in the container */
+            color: inherit; 
+        }
+        
+        .status-message {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--light-text-color);
+        }
+        
+        .info.error {
+            color: var(--closed-red);
+            padding: 15px;
+            background-color: #fff1f0;
+            border: 1px solid #ffa39e;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 600px) {
+            #trackId { width: 65%; border-radius: 8px 0 0 8px;}
+            .track-btn { width: 35%; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo-text">YIAscm.<span style="color: var(--accent-green);">CampusShield</span></div>
+        <nav class="nav-links">
+            <a href="stuhome.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="rules.html">Guidelines</a>
+            <a href="track.html" class="active">Track</a>
+            <a href="report.html">Report</a>
+            <a href="ragging_report_login.html">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1><i class="fas fa-search-location mr-2"></i> Track Your Report Status</h1>
+        
+        <form id="trackingForm" class="tracking-form">
+            <input type="text" id="trackId" name="trackId" placeholder="Enter your Tracking ID (e.g., RPT-123456)" required>
+            <button type="submit" class="track-btn">Track</button>
+        </form>
+
+        <div id="resultDiv">
+            </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div><h4><i class="fas fa-phone-alt"></i> Contact & Helpline</h4><p>24/7 National Anti-Ragging Helpline:</p><p><strong>1800-XXX-XXXX</strong></p><p>Campus Security Desk: (011) 555-SAFE</p></div>
+            <div><h4><i class="fas fa-envelope"></i> Contact Us</h4><a href="mailto:support@antiragging.edu">support@antiragging.edu</a><a href="mailto:admin@university.edu">admin@university.edu</a><p style="margin-top: 10px;">(Please use the report form for incidents.)</p></div>
+            <div><h4><i class="fas fa-code"></i> Project Details</h4><p>YIAscm.CampusShield Initiative V2.0</p><p>Developed By: Student Tech Team (2025)</p><p>Goal: Secure, Transparent, and Immediate Action Platform.</p></div>
+            <div class="copy-info">&copy; 2025 YIAscm.CampusShield | All Rights Reserved.</div>
+        </div>
+    </footer>
+
+</body>
+</html>

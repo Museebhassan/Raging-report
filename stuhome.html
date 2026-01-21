@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - YIASCM.CampusShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-purple: #9829e7; /* Darker purple */
+            --light-purple: #9370DB; /* Medium purple */
+            --accent-green: #28a745; /* For positive/action elements */
+            --white: #fff;
+            --text-color: #333;
+            --card-bg: rgba(255, 255, 255, 0.98); 
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --header-height: 70px;
+        }
+
+         body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* --- ENHANCED BACKGROUND STYLE --- */
+            background: 
+                linear-gradient(rgba(210, 210, 210, 0.85), rgba(226, 232, 240, 0.85)), /* Light Overlay */
+                url('image2.png') no-repeat center center fixed; /* Placeholder Image */
+            background-size: cover;
+            color: var(--text-color);
+        }
+
+
+        /* --- Global Header (Navbar) --- */
+        .header {
+            height: var(--header-height);
+            background-color: var(--primary-purple);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+            transition: color 0.2s, border-bottom 0.2s;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #E0BBE4; 
+            border-bottom-color: var(--white);
+        }
+        
+        /* --- MAIN CONTENT & HERO --- */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding-top: 30px;
+            padding-bottom: 50px;
+        }
+
+        /* Hero Section Styling */
+        .hero-section {
+            background: linear-gradient(105deg, var(--primary-purple) 0%, var(--light-purple) 100%);
+            color: var(--white);
+            padding: 80px 40px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 40px rgba(106, 13, 221, 0.3); /* Purple shadow */
+        }
+        
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        
+        .hero-section p {
+            font-size: 1.2rem;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            opacity: 0.9;
+        }
+
+        /* Primary Call-to-Action Button */
+        .primary-cta {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 35px;
+            background-color: var(--accent-green);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .primary-cta i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .primary-cta:hover {
+            background-color: #1e8739; /* Darker green */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        /* --- FEATURE CARDS --- */
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--primary-purple);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--light-purple);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 0;
+            color: var(--primary-purple);
+        }
+
+        .feature-card p {
+            color: var(--light-text-color);
+            margin-bottom: 20px;
+        }
+
+        .card-link {
+            display: inline-block;
+            color: var(--accent-green);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .card-link i {
+            margin-left: 5px;
+            transition: margin-left 0.2s;
+        }
+        
+        .card-link:hover {
+            color: #1e8739;
+        }
+        
+        .card-link:hover i {
+            margin-left: 10px;
+        }
+        
+        /* --- FOOTER STYLING --- */
+        .footer {
+            background-color: var(--primary-purple);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 30px 5%;
+            font-size: 0.9rem;
+            border-top: 5px solid var(--accent-green);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        .footer-content > div {
+            flex: 1 1 200px;
+            margin: 15px 10px;
+        }
+
+        .footer-content h4 {
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+
+        .footer-content p, .footer-content a {
+            margin: 5px 0;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+        }
+
+        .footer-content a:hover {
+            color: var(--white);
+        }
+        
+        .copy-info {
+            flex-basis: 100%;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.8rem;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 20px;
+            }
+            .nav-links {
+                display: none; 
+            }
+            .hero-section {
+                padding: 50px 20px;
+            }
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            .hero-section p {
+                font-size: 1rem;
+            }
+            .primary-cta {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .feature-cards {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo-text">YIASCM.<span style="color: var(--accent-green);">CampusShield</span></div>
+        <nav class="nav-links">
+            <a href="stuhome.html" class="active">Home</a>
+            <a href="about.html">About</a>
+            <a href="rules.html">Guidelines</a>
+            <a href="track.html">Track</a>
+            <a href="report.html">Report</a>
+            <a href="ragging_report_login.html">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        
+        <section class="hero-section">
+            <i class="fas fa-shield-alt fa-3x mb-4"></i>
+            <h1>Your Safety is Our Priority.</h1>
+            <p>
+                Report incidents of ragging, harassment, or abuse swiftly and confidentially. We are committed to a zero-tolerance policy.
+            </p>
+            <a href="report.html" class="primary-cta">
+                <i class="fas fa-bullhorn"></i> Submit New Report Now
+            </a>
+        </section>
+
+        <section class="feature-cards">
+            
+            <div class="feature-card" style="border-top-color: var(--accent-green);">
+                <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+                <h3>Report an Incident</h3>
+                <p>Use our secure form to detail any instance of ragging or harassment. Your anonymity is protected.</p>
+                <a href="report.html" class="card-link" style="color: var(--accent-green);">
+                    Start Reporting <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-book-reader"></i></div>
+                <h3>View Guidelines & Rules</h3>
+                <p>Familiarize yourself with the university's anti-ragging policies, disciplinary actions, and legal provisions.</p>
+                <a href="rules.html" class="card-link">
+                    Read Policy Manual <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-search-location"></i></div>
+                <h3>Track Report Status</h3>
+                <p>Check the real-time progress of your submitted complaints using your unique confidential reference number.</p>
+                <a href="track.html" class="card-link">
+                    Check Status <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            
+            <div>
+                <h4><i class="fas fa-phone-alt"></i> Contact & Helpline</h4>
+                <p>24/7 National Anti-Ragging Helpline:</p>
+                <p><strong>1800-XXX-XXXX</strong></p>
+                <p>Campus Security Desk: (011) 555-SAFE</p>
+            </div>
+
+            <div>
+                <h4><i class="fas fa-envelope"></i> Contact Us</h4>
+                <a href="mailto:support@antiragging.edu">support@antiragging.edu</a>
+                <a href="mailto:admin@university.edu">admin@university.edu</a>
+                <p style="margin-top: 10px;">(Please use the report form for incidents.)</p>
+            </div>
+
+            <div>
+                <h4><i class="fas fa-code"></i> Project Details</h4>
+                <p>YIASCM.CampusShield Initiative V2.0</p>
+                <p>Developed By: G M Museeb Hassan & Mohammed Aman</p>
+                <p>Goal: Secure, Transparent, and Immediate Action Platform.</p>
+            </div>
+
+            <div class="copy-info">
+                &copy; 2025 YIASCM.CampusShield | All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
